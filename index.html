@@ -3793,7 +3793,7 @@ window.saveEditTeam = async function(){
 function renderPoolsPreview(){
   const el = document.getElementById('poolsPreview'); if(!el) return;
   if(!ST.pools.A.length){ el.innerHTML='<div class="info info-y">Tirage non effectué.</div>'; return; }
-  el.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">` +
+  el.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:10px">` +
     POOL_NAMES().map(p=>{
       const ids=ST.pools[p];
       return `<div style="background:var(--s2);border:1px solid var(--bdr);border-radius:8px;padding:10px 12px">
@@ -4141,7 +4141,7 @@ function rankRowColor(rank){
 }
 function renderPoolStandingsPanel(){
   const el=document.getElementById('poolStandingsPanel'); if(!el) return;
-  el.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:10px">` +
+  el.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr));gap:10px">` +
     POOL_NAMES().map(p=>{
       const st=computePoolStandings(p);
       const col = POOL_COLORS[p];
@@ -4294,7 +4294,7 @@ function renderGroupStandingsPanel(){
   const el=document.getElementById('groupStandingsPanel'); if(!el) return;
   const kind = curProg().kind;
   const relLabel = {1:'1ère',2:'2e',3:'3e',4:'4e'};
-  el.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px">` +
+  el.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:10px">` +
     BRACKETS.map(b=>{
       const col = BRACKET_COLORS[b];
       const base = BRACKET_BASE_PLACE[b];
@@ -5789,6 +5789,76 @@ label[for="cfg_refon"], label[for="cfg_teamrefon"]{ font-size:14px!important; te
   .tmr-card .timer-big{ font-size:24px; }
 }
 
+/* ── ADAPTATION MOBILE v2 — écran TV / grand écran et pages sur téléphone ──
+   Ne change rien sur ordinateur ni sur une vraie TV (règles ≤ 767 px seulement). */
+html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+#loginScreen{ min-height:100vh; min-height:100dvh; }
+@media(max-width:767px){
+  /* Pages classiques */
+  .steps{ padding:8px 10px; }
+  .step-ln{ width:14px; margin:0 2px; }
+  .spec-nav-btn{ padding:12px 14px; font-size:13px; }
+  .hdr-drawer{ width:250px; max-width:86vw; }
+  input[style*="width:230px"], input[style*="width:160px"], input[style*="width:150px"]{ width:100%!important; max-width:100%; }
+  input[style*="min-width:220px"]{ min-width:0!important; }
+  #poolStandingsPanel table th, #poolStandingsPanel table td,
+  #groupStandingsPanel table th, #groupStandingsPanel table td{ padding-left:4px!important; padding-right:4px!important; }
+  #poolStandingsPanel > div > div, #groupStandingsPanel > div > div{ -webkit-overflow-scrolling:touch; }
+
+  /* Écran TV ouvert depuis un téléphone (portrait) */
+  #pageTV{ padding-left:env(safe-area-inset-left); padding-right:env(safe-area-inset-right); }
+  .tv-hdr{ padding:calc(8px + env(safe-area-inset-top)) 12px 8px; gap:6px 10px; }
+  .tv-brand{ font-size:15px; flex:1 1 auto; min-width:0; }
+  .tv-phase-badge{ font-size:11px; padding:3px 10px; }
+  .tv-clock{ font-size:17px; }
+  .tv-snd{ flex:1 1 100%; margin-left:0; font-size:12px; padding:6px 12px; }
+  .tv-sub-ttl{ font-size:17px; padding:8px 10px 2px; line-height:1.2; }
+  .tv-section-ttl{ font-size:13px; letter-spacing:1.2px; margin:12px 0 8px; }
+  .tv-body{ padding:0 10px 78px; }
+  .tv-match-grid{ grid-template-columns:1fr; gap:8px; }
+  .tv-match-row{ padding:9px 11px; border-radius:12px; }
+  .tv-match-meta{ font-size:11px; }
+  .tv-match-teams{ gap:6px; }
+  .tv-team{ font-size:14px; line-height:1.2; min-width:0; overflow-wrap:anywhere; }
+  .tv-score{ font-size:19px; padding:0 2px; min-width:50px; text-align:center; }
+  .tv-more{ font-size:12px; padding:6px 0 2px; }
+  .tv-empty{ padding:22px 10px; font-size:14px; }
+  .tv-pools-grid{ grid-template-columns:1fr; gap:10px; }
+  .tv-pool-ttl{ font-size:14px; padding:6px 12px; }
+  .tv-stbl{ font-size:13px; }
+  .tv-stbl th{ padding:5px 4px; font-size:9px; }
+  .tv-stbl td{ padding:6px 4px; }
+  .tv-stbl .tv-team-name{ overflow-wrap:anywhere; }
+  .tv-final-tbl{ font-size:14px; }
+  .tv-final-tbl th{ padding:6px 4px; font-size:10px; }
+  .tv-final-tbl td{ padding:8px; }
+  .tv-place{ width:44px; }
+  .tv-tmr-bar{ padding:3px 8px; gap:5px; }
+  .tv-msg-banner{ font-size:clamp(14px,4.4vw,20px); padding:10px 14px calc(10px + env(safe-area-inset-bottom)); }
+  .tv-msg-full{ font-size:clamp(24px,8vw,44px); padding:8vw 6vw; }
+  /* Barre de réglages : une seule ligne, défilable au doigt */
+  .tv-bar{ flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  .tv-bar::-webkit-scrollbar{ display:none; }
+  .tv-bar > *{ flex:0 0 auto; white-space:nowrap; }
+  .tv-bar button{ padding:8px 12px; }
+  .tv-bar input[type=number]{ width:50px!important; }
+  .tv-show-tab{ bottom:calc(14px + env(safe-area-inset-bottom)); }
+}
+/* Téléphone tenu à l'horizontale : on récupère de la hauteur */
+@media(max-height:480px) and (orientation:landscape) and (max-width:950px){
+  .tv-hdr{ flex-wrap:nowrap; padding:calc(4px + env(safe-area-inset-top)) 14px 4px; gap:4px 12px; }
+  .tv-brand{ font-size:14px; flex:0 1 auto; }
+  .tv-clock{ font-size:15px; }
+  .tv-snd{ flex:0 0 auto; margin-left:auto; padding:3px 10px; }
+  .tv-sub-ttl{ font-size:15px; padding:3px 0 0; }
+  .tv-tmr-bar{ padding:2px 10px; }
+  .tv-body{ padding:0 12px 56px; }
+  .tv-section-ttl{ margin:8px 0 6px; }
+  .tv-bar{ padding:4px 12px calc(4px + env(safe-area-inset-bottom)); gap:6px; }
+  .tv-bar button, .tv-bar select, .tv-bar input{ padding:4px 9px; font-size:12px; }
+  .tv-match-grid, .tv-pools-grid{ grid-template-columns:repeat(2,1fr); }
+}
+
 @media print{
   body{ background:#fff!important;color:#000!important;font-size:11px; }
   .hdr,.steps,.rtabs,.btn,.hdr-btn,button{ display:none!important; }
@@ -6392,7 +6462,7 @@ label[for="cfg_refon"], label[for="cfg_teamrefon"]{ font-size:14px!important; te
   <div class="info info-b" style="margin-bottom:14px;font-size:12px">
     Cliquez sur une équipe pour afficher et imprimer son programme complet (poules + phase finale).
   </div>
-  <div id="teamsSpecGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px"></div>
+  <div id="teamsSpecGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));gap:10px"></div>
 </div>
 </div>
 
